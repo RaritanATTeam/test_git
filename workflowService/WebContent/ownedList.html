@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+label ,td{
+font-size:12px;
+font-family:Arial, Helvetica, sans-serif;	
+}
+.filter_div{
+  padding:10px;	
+}
+.t_body{
+overflow-y: auto; 
+max-height:100px;
+}
+.tbl_cell_description
+{
+    white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
+	-o-text-overflow: ellipsis; 
+	-khtml-text-overflow: ellipsis; 
+	-moz-text-overflow: ellipsis; 
+	-webkit-text-overflow: ellipsis;
+	-moz-binding: url('./css/ellipsis.xml#ellipsis');
+}
+</style>
+</head>
+<body>
+
+<div align="center" id="main">
+<img src="./images/logo-with-tag-130x39.gif"/>
+<h4 style="padding-top:0px;" id="id_user">Loading Please Wait...<image style="padding-left:15px;" src="./images/ajax-loader.gif"/></h4>
+<div class="filter_div"><label>Input Filter by Description:</label><input type="text" value='' style="padding-right:10px;" id="id_filter_input"/><input type='button' value="filter" id="id_filter" style="cursor:pointer;"/> <label>or by Process</label> <select id="type_instance" style="cursor:pointer;"></select></div>
+
+<table cellpadding="1" cellspacing="0" border="1"  style="table-layout:fixed; width:570px;">
+<thead style="background-color:#CCC;" >
+       <tr>
+        <td>
+        	<label>Process</label>
+        </td>
+        <td style='width:100px;'>
+        	<label>Description</label>
+        </td>
+        <td style='width:50px;'><label>Form</label></td>
+        <td style='width:30px;'><label>UI</label></td>
+        <td style="width:90px;cursor:pointer;" id="id_created"><label style="color:blue; text-decoration:underline;">Assigned</label><image align='top' style="margin-top:-5px;" src='./images/1space.gif' id="id_img_created"/></td>
+        <td style='width:100px;'><label>State</label></td>
+       </tr>
+</thead>
+
+<tbody id="tasklist">
+      
+</tbody>
+
+</table>
+
+<div ><h3 id="id_not_found" style="color:'red';padding:10px;"></h3>
+</div>
+
+
+
+
+
+<script type="text/javascript" src="./scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="./scripts/url_utility.js"></script>
+<script type="text/javascript" src="./scripts/ownedList.js"></script>
+
+
+</body>
+</html>

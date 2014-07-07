@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>comment</comment>
+	<entry key="bonita.api.host">http://23.23.235.113:9080/</entry>
+	<entry key="bonita.api.username">admin</entry>
+	<entry key="bonita.api.password">bpm</entry>
+	<entry key="bonita.api.http.username">restuser</entry>
+	<entry key="bonita.api.http.password">restbpm</entry>
+	<entry key="bonita.process.xp_code.id">XP_Code--1.6</entry>
+	<entry key="bonita.process.review_rally_us_process.id">Review_Rally_US_Process--1.9</entry>
+	<entry key="rally.api.host">https://rally1.rallydev.com/slm/webservice/x</entry>
+	<entry key="rally.api.http.username">randy.chen@raritan.com</entry>
+	<entry key="rally.api.http.password">raritanat1219</entry>
+	<entry key="rally.project.ids">3874572825,4681584283,5867162001,5987875563</entry>
+	<entry key="service.url">http://23.23.235.113:8080/workflowService/</entry>
+	<!-- Funnel_Process -->
+	<entry key="bonita.process.funnel.id">AT_Funnel_Process--1.6</entry>
+	<entry key="funnel">AT_Funnel_Process--1.6</entry>
+	<entry key="API_TEST">API_TEST--1.0</entry>
+	<entry key="file.checklist.funnel.id">funnel.xml</entry>
+	<entry key="rally.project.funnel.ids">5624196256</entry>
+	<!-- XP_Project -->
+	<entry key="bonita.process.xp_project.id">XP_Project--1.9</entry>
+	<entry key="file.checklist.xp_project.id">release_list.xml</entry>
+	<entry key="rally.project.xp_project.ids">4681584283</entry>
+	<!-- XP_Iteration -->
+	<entry key="bonita.process.xp_iteration.id">XP_Iteration--1.3</entry>
+	<entry key="file.checklist.xp_iteration.id">iteration_list.xml</entry>
+	<entry key="rally.project.xp_iteration.ids">4681584283</entry>
+	<!-- XP_Development -->
+	<entry key="bonita.process.xp_development.id">XP_Development--1.5</entry>
+	<entry key="file.checklist.xp_development.id">development_list.xml</entry>
+	<entry key="rally.project.xp_development.ids">4681584283</entry>
+	<!--Design_DOC_PROJECT-->
+	<entry key="design_doc">Design_Doc_Review_--1.9</entry>
+        <entry key="ideal_process">Innovation_Process--1.3</entry>
+        
+</properties>

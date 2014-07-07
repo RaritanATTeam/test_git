@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<forms-definition product-version="5.6">
+  <migration-product-version>5.6</migration-product-version>
+  <application name="XP_Code" version="1.4">
+    <permissions>process#XP_Code--1.3</permissions>
+    <application-label>XP_Code</application-label>
+    <application-layout>html/XP_Code_process_template.html</application-layout>
+    <mandatory-symbol>*</mandatory-symbol>
+    <error-template>html/XP_Code_error_template.html</error-template>
+    <forms>
+      <form first-page="TA_TC_relation_setup" id="XP_Code--1.3--TA_TC_relation_setup$entry">
+        <form-type>entry</form-type>
+        <permissions>activity#XP_Code--1.3--TA_TC_relation_setup</permissions>
+        <pages>
+          <page id="TA_TC_relation_setup">
+            <page-label>TA/TC relation setup</page-label>
+            <allow-html-in-label>false</allow-html-in-label>
+            <page-layout>html/TA_TC_relation_setup_TA_TC_relation_setup.html</page-layout>
+            <widgets>
+              <widget id="task_no" type="TEXT">
+                <initial-value>
+                  <expression>${task_no}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <label>Task No:</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <variable-bound>${task_no}</variable-bound>
+              </widget>
+              <widget id="test_case_no" type="TEXTBOX">
+                <initial-value>
+                  <expression>${test_case_no}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <mandatory>false</mandatory>
+                <readonly>false</readonly>
+                <label>Test Case No:</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <title>TCXXX</title>
+                <variable-bound>${test_case_no}</variable-bound>
+              </widget>
+              <widget id="Message1" type="MESSAGE">
+                <initial-value>
+                  <expression>${testCaseExists}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <style>input_TA_TC_relation_setup_TA_TC_relation_setup_Message1</style>
+                <variable-bound>${testCaseExists}</variable-bound>
+              </widget>
+              <widget id="Confirm" type="BUTTON_SUBMIT">
+                <label-button>false</label-button>
+                <label>Confirm</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <label-style>label_TA_TC_relation_setup_TA_TC_relation_setup_Confirm</label-style>
+                <style>input_TA_TC_relation_setup_TA_TC_relation_setup_Confirm</style>
+              </widget>
+            </widgets>
+            <actions>
+              <action type="SET_VARIABLE">
+                <variable>test_case_no</variable>
+                <variable-type>PROCESS_VARIABLE</variable-type>
+                <expression>field_test_case_no</expression>
+              </action>
+            </actions>
+          </page>
+        </pages>
+      </form>
+      <form first-page="Verify_test_result" id="XP_Code--1.3--Verify_Test_Result$entry">
+        <form-type>entry</form-type>
+        <permissions>activity#XP_Code--1.3--Verify_Test_Result</permissions>
+        <pages>
+          <page id="Verify_test_result">
+            <page-label>Verify test result</page-label>
+            <allow-html-in-label>false</allow-html-in-label>
+            <page-layout>html/Verify_Test_Result_Verify_test_result.html</page-layout>
+            <widgets>
+              <widget id="task_no" type="TEXT">
+                <initial-value>
+                  <expression>${task_no}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <label>Task No:</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <variable-bound>${task_no}</variable-bound>
+              </widget>
+              <widget id="test_case_no" type="TEXT">
+                <initial-value>
+                  <expression>${test_case_no}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <label>Test Case No:</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <variable-bound>${test_case_no}</variable-bound>
+              </widget>
+              <widget id="Test_Result" type="TEXT">
+                <initial-value>
+                  <expression>${testResult}</expression>
+                </initial-value>
+                <allow-html-in-field>false</allow-html-in-field>
+                <label>Test Result:</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+                <label-style>label_Verify_Test_Result_Verify_test_result_Test_Result</label-style>
+                <style>input_Verify_Test_Result_Verify_test_result_Test_Result</style>
+                <variable-bound>${testResult}</variable-bound>
+              </widget>
+              <widget id="Submit1" type="BUTTON_SUBMIT">
+                <label-button>false</label-button>
+                <label>Verify test result</label>
+                <allow-html-in-label>false</allow-html-in-label>
+                <label-position>LEFT</label-position>
+              </widget>
+            </widgets>
+          </page>
+        </pages>
+      </form>
+    </forms>
+  </application>
+</forms-definition>

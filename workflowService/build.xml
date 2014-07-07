@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="workflowService" default="build" basedir=".">
+
+	<property name="contextroot.dir" value="./WebContent"/> 
+	<property name="src.dir" value="./src"/>
+	<property name="lib.ext.dir" value="./lib"/>
+	<property name="classes.dir" value="${contextroot.dir}/WEB-INF/classes"/>
+	<property name="lib.dir" value="${contextroot.dir}/WEB-INF/lib"/>
+	<property name="dist.dir" value="./dist"/> 
+	<property name="doc.dir" value="./doc"/> 
+	
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+
+	<target name="build">
+	
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" debuglevel="${debuglevel}" target="${target}" source="${source}" encoding="UTF-8">
+			<classpath>
+				<pathelement location="${classes.dir}" />
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${lib.ext.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+			
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml"/>
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>		
+	</target>
+	
+	<target depends="build" name="war" >
+	
+		<jar basedir="${contextroot.dir}" compress="false" jarfile="${dist.dir}/${ant.project.name}.war">
+			<include name="**/*.*"/>
+		</jar>		
+	</target>	
+	
+	<path id="doclet.classpath">
+	
+		<!--classpath-->
+			<pathelement location="${classes.dir}" />
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${lib.ext.dir}">
+				<include name="*.jar" />
+			</fileset>
+		<!--/classpath-->
+	
+	</path>
+  
+	<target name="docs">
+		<!-- generate standard Javadoc output -->
+		<!--
+		<javadoc sourcepath="src/main/java" destdir="${target.dir}/apidocs" use="true">
+		  <classpath refid="classpath"/>
+		</javadoc>
+		-->
+		
+		<!-- generate SpringDoclet output, linked to Javadoc output -->
+		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}/springdocs">
+		  <classpath refid="doclet.classpath"/>
+		  <doclet name="org.springdoclet.SpringDoclet" pathref="doclet.classpath">
+			<param name="-d" value="${doc.dir}/springdocs"/>
+			<!--<param name="-linkpath" value="../apidocs/"/>-->
+		  </doclet>
+		</javadoc>
+	</target>
+	
+</project>

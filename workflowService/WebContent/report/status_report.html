@@ -1,0 +1,455 @@
+<html>
+<head>
+<script src="http://23.23.126.164:8080/workflowService/scripts/jquery-1.7.1.min.js"></script>
+
+<link rel='stylesheet' type='text/css' href='http://23.23.126.164:8080//workflowService/report/css/report_style.css' />
+<script src='http://23.23.126.164:8080/workflowService/report/processes/UserStoryDesignProcess.js'></script>
+<!--script src='http://23.23.126.164:8080/workflowService/report/processes/UserStoryEstimateProcess.js'></script-->
+<script src='processes/UserStoryEstimateProcess.js'></script>
+
+
+<script src='http://23.23.126.164:8080/workflowService/report/processes/ImplementationTaskProcess.js'></script>
+<script src='http://23.23.126.164:8080/workflowService/report/processes/CodeReviewTaskProcess.js'></script>
+
+<script src='http://23.23.126.164:8080/workflowService/report/processes/TestProcessOfATSystemTester.js'></script>
+
+<script>
+
+//Golbal variable for general use
+var iterationInfo={
+	startDate: "",
+	endDate: "",
+	name: "",
+	weeks: 0
+};
+
+//Define process execution result
+function ProcessResult() {
+    this.tasks=[];
+    this.severity;
+    this.message;
+}
+
+//Collect all user stories in array
+var userStoryArray=new Array();
+
+function init() {
+	
+	getProjects();
+	$("#projectSel").change(
+		function() {		
+			ref=$("#projectSel").val();
+			console.info("ref="+ref);
+			getIterations(ref);
+		
+			$.cookie("status_report.project", ref, { expires: 7 });
+		}
+	);
+	
+	$("#iterationSel").change(
+		function() {
+			var ref=$("#iterationSel").val();
+			getIterationInfo(ref);
+			
+			drawIterationTimeLine();
+			
+			getUserStories(ref);
+			
+			$.cookie("status_report.iteration", ref, { expires: 7 });
+			
+		}
+	);
+
+	var ref=$.cookie("status_report.project");
+
+	if(ref) {
+		$("#projectSel").val(ref);
+		$("#projectSel" ).trigger( "change" );
+		
+		
+			ref=$.cookie("status_report.iteration");
+			if(ref) {
+				$("#iterationSel").val(ref);
+				$( "#iterationSel" ).trigger( "change" );
+			}
+		
+	}
+}
+
+function addDate(fromDate,dadd){
+	fromDate= fromDate.getTime();
+	fromDate = fromDate + dadd * 1 * 60 * 60 * 1000 * 24;
+	fromDate = new Date(fromDate);
+	return fromDate;
+}
+
+function drawIterationTimeLine() {
+
+	var weekday = new Array(7);
+	weekday[0]=  "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var totalDays=getIterationTotalDay();
+	
+	var sections=Math.round(totalDays/3);
+	var sec1=sections;
+	var sec3=totalDays-(sec1*2);
+	
+	console.info("sec1="+sec1+" sec3="+sec3);
+	
+	console.info("iterationInfo.startDate.getMonth()="+iterationInfo.startDate.getMonth());
+	console.info("iterationInfo.startDate.getDate()="+iterationInfo.startDate.getDate());
+	
+	//var startDate=(iterationInfo.startDate.getMonth()+1) +"/" +iterationInfo.startDate.getDate();
+	//var endDate=(iterationInfo.endDate.getMonth()+1) +"/" +iterationInfo.endDate.getDate();
+	//var startDate=iterationInfo.startDate.toLocaleDateString();
+	//var endDate=iterationInfo.endDate.toLocaleDateString();
+
+	var html="";
+	html+="<table border=0 width='100%'>"
+	html+="<tr>"
+	html+="<td colspan="+sec1+" style='text-align: left'> </td>";
+	html+="<td colspan="+sec1+">"+iterationInfo.name+"</td>";
+	html+="<td colspan="+sec3+" style='text-align: right'> </td>";
+	html+="</tr>";
+	html+="<tr class='timeframe'>";
+	
+	console.info("0 iterationInfo.startDate="+iterationInfo.startDate);
+	
+	var dateNo=0;
+	for(var i=0 ; i < totalDays ; i++) {
+				
+		var checkPointStartDate=addDate(iterationInfo.startDate, i);
+		
+		console.info("1 checkPointStartDate="+checkPointStartDate);
+		
+		var dateText=(checkPointStartDate.getMonth()+1) +"/" +checkPointStartDate.getDate();
+		dateText+="<br/>("+weekday[checkPointStartDate.getDay()]+")";
+		
+		var status=getCurrentTimeStatus(checkPointStartDate,checkPointStartDate);
+
+		var bgColor="#DDDDDD";
+		if(status>=2) {
+			bgColor="#AAFFAA";
+		}
+	
+		html+="<td style='background-color:"+bgColor+"'>"+dateText+"</td>";
+	}
+	html+="</tr>"
+	html+="</table>"
+	
+	$("#iterationTimeLine").html(html);
+}
+
+function getProjects() {
+
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/project?pagesize=100",
+		type:"GET",
+		dataType: "json",
+		async: false,
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var html="<option value=''></option>";
+			
+			var projects=data.QueryResult.Results;
+			for(var key in projects ) {
+				var project=projects[key];
+				if(project._refObjectName=="Randy Learning" || project._refObjectName=="Floor Maps" || project._refObjectName=="dcTrack - RT Group") {
+					html+="<option value='"+project._ref+"'>";
+					html+=project._refObjectName;
+					html+="</option>";
+				}
+				
+			}
+
+			$("#projectSel").html(html);
+		}
+	});
+                
+}
+
+function getIterations(projectRef) {
+	console.info("getIterations projectRef="+projectRef);
+
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/iteration?project="+projectRef+"&order=StartDate%20desc&projectScopeUp=false&pagesize=100",
+		type:"GET",
+		dataType: "json",
+		async: false,
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var html="<option value=''></option>";
+			
+			var iterations=data.QueryResult.Results;
+			for(var key in iterations ) {
+				var iteration=iterations[key];
+				html+="<option value='"+iteration._ref+"'>";
+				html+=iteration._refObjectName;
+				html+="</option>";
+			}
+
+			$("#iterationSel").html(html);
+		}
+	});
+                
+}
+
+function getIterationInfo(ref) {
+
+	$.ajax({
+		url: ref+"?fetch=true",
+		type:"GET",
+		dataType: "json",
+		async: false,
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+			console.info("data="+JSON.stringify(data));
+			iterationInfo.name=data.Iteration._refObjectName;
+			
+			var startDate=data.Iteration.StartDate;
+			//startDate=startDate.replace("T"," ");
+			//startDate=startDate.replace(".000Z","");
+			
+			var endDate=data.Iteration.EndDate;
+			//endDate=endDate.replace("T"," ");
+			//endDate=endDate.replace(".000Z","");
+			
+			console.info("startDate="+startDate);
+			console.info("endDate="+endDate);
+			
+			iterationInfo.startDate=new Date(startDate);
+			iterationInfo.endDate=new Date(endDate);
+			
+			console.info("iterationInfo.startDate.getDate()="+iterationInfo.startDate.getDate());
+			console.info("iterationInfo.startDate.getTime()="+iterationInfo.startDate.getTime());
+			
+			//iterationInfo.startDate=new Date(data.Iteration.StartDate);
+			//iterationInfo.endDate=new Date(data.Iteration.EndDate);
+			
+			/*
+			var startDate=new Date(data.Iteration.StartDate);
+			var timeZoneOffsetHr=(startDate.getTimezoneOffset()/60);
+			startDate.setHours(startDate.getHours()+timeZoneOffsetHr);
+			iterationInfo.startDate=startDate;
+			
+			console.info("......startDate="+startDate);
+			
+			var endDate=new Date(data.Iteration.EndDate);
+			endDate.setHours(endDate.getHours()+timeZoneOffsetHr);
+			iterationInfo.endDate=endDate;
+			
+			console.info("......endDate="+endDate);
+			*/
+						
+			console.info("data.StartDate="+data.Iteration.StartDate);
+			console.info("data.EndDate="+data.Iteration.EndDate);
+			console.info("0 iterationInfo="+JSON.stringify(iterationInfo));
+		}
+	});
+	
+}
+
+function toggle(formattedID, divId) {
+
+	$( "#"+formattedID ).toggle();
+	
+	console.info("divId="+divId);
+	
+	$("#"+divId).toggleClass("button_minus button_plus");
+
+	var isOpen=$("#"+formattedID).is(":hidden") ? false : true;
+	console.info("isOpen="+isOpen);
+		
+	$.cookie("status_report.isOpen_"+formattedID, isOpen, { expires: 7 });
+}
+
+function getUserStories(ref) {
+	
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?projectScopeUp=false&query=(Iteration%20=%20"+ref+")&pagesize=100&fetch=true",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var html="";
+			
+			var userStories=data.QueryResult.Results;
+			for(var key in userStories ) {
+				var userStory=userStories[key];
+				var formattedID=userStory.FormattedID;
+				
+				
+				var isOpen=($.cookie("status_report.isOpen_"+formattedID) ==="true" );				
+				var display=isOpen ? "block" : "none";
+				var iconClass=isOpen ? "button_minus" : "button_plus";
+
+				html+="<div class='user_story'>";
+				html+="<a href='javascript:toggle(\""+formattedID+"\", \"icon_"+formattedID+"\")'>";
+				html+="<div id='icon_"+formattedID+"' class='"+iconClass+"'></div></a> ";
+				html+="<div class='user_story_title'>"+formattedID+" "+userStory._refObjectName+"</div>";
+				//html+="<div id="+formattedID+" style='display:none'></div>";
+				html+="<div id="+formattedID+" style='display:"+display+"'></div>";
+				html+="</div>";
+				
+				userStoryArray.push(formattedID);
+			}
+			
+			
+			$("#iteration").html(html);
+			
+			for(var key in userStories ) {
+				var userStory=userStories[key];
+				
+				var tasks=getTasks(userStory);
+				
+				var contentHTML="<table><tr valign='top'>";
+				
+				contentHTML+="<td>";
+				contentHTML+=showUserStoryEstimateProcess(tasks);
+				contentHTML+=showUserStoryDesignProcess(tasks);
+				contentHTML+="</td>";
+				
+				contentHTML+="<td>";
+				contentHTML+=showImplementationTaskProcess(tasks);
+				contentHTML+=showCodeReviewTaskProcess(tasks);
+				contentHTML+="</td>";
+				
+				contentHTML+="<td>";
+				contentHTML+=showTestProcessOfATSystemTester(tasks);
+				contentHTML+="</td>";
+				
+				contentHTML+="</tr></table>";
+				
+				$("#"+userStory.FormattedID).html(contentHTML);
+				
+				
+			}
+			
+		}
+	});
+	
+}
+
+function getStatusLevel(status) {
+	console.info("status="+status);
+	if(status=="Defined") {
+		return 1;
+	} else if(status=="In-Progress") {
+		return 2;
+	} else if(status=="Completed") {
+		return 3;
+	}
+	return 0;
+}
+
+function getCurrentTimeStatus(checkPointStartDate, checkPointEndDate) {
+
+	var now=(new Date()).getTime();
+	var timeStatus=0;
+	if(now<checkPointStartDate.getTime()) {
+		//Not yet
+		timeStatus=1;
+	} else if(now>=checkPointStartDate.getTime() && now<=checkPointEndDate.getTime()) {
+		//in processing
+		timeStatus=2;
+	} if(now>checkPointEndDate.getTime()) {
+		//behind
+		timeStatus=3;
+	}
+	
+	return timeStatus;
+}
+
+function getIterationTotalDay() {
+
+	var msecPerMinute = 1000 * 60;
+	var msecPerHour = msecPerMinute * 60;
+	var msecPerDay = msecPerHour * 24;
+
+	var startDate=iterationInfo.startDate;
+	var endDate=iterationInfo.endDate;
+	
+	var interval = endDate.getTime() - startDate.getTime();
+	var days = Math.floor(interval / msecPerDay )+1;
+	
+	console.info("days="+days);
+	
+	return days;
+}
+
+function getTasks(userStory) {
+	var tasks;
+
+	$.ajax({
+		url: userStory._ref+"/Tasks",
+		type:"GET",
+		dataType: "json",
+		async: false,
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+			tasks=data.QueryResult.Results;
+		}
+
+	});
+
+	return tasks;
+}
+
+function expandAll() {
+	if(!userStoryArray) return;
+	
+	console.info("userStoryArray.length="+userStoryArray.length);
+	for (var i=0; i < userStoryArray.length; i++) {
+		var formattedID=userStoryArray[i];
+		$("#"+formattedID).show();
+		$("#icon_"+formattedID).switchClass("button_plus","button_minus");
+		$.cookie("status_report.isOpen_"+formattedID, true, { expires: 7 });
+	}
+}
+
+function closeAll() {
+	if(!userStoryArray) return;
+	
+	console.info("userStoryArray.length="+userStoryArray.length);
+	for (var i=0; i < userStoryArray.length; i++) {
+		var formattedID=userStoryArray[i];
+		$("#icon_"+formattedID).switchClass("button_minus","button_plus");
+		$("#"+formattedID).hide();
+		$.cookie("status_report.isOpen_"+formattedID, false, { expires: 7 });
+	}
+}
+
+</script>
+<body onload="init()">
+	<select name="project" id="projectSel"></select>
+	<select name="iteration" id="iterationSel"></select><br/><br/>
+	
+	<div id="iterationTimeLine"></div>
+	
+	<a href='javascript:expandAll()'><div class='button_plus'></div></a> &nbsp;
+	<a href='javascript:closeAll()'><div class='button_minus'></div></a>
+	
+	<div id="iteration">
+	</div>
+</body>
+</head>
+</html>

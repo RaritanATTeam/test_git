@@ -1,0 +1,262 @@
+<html><head>
+<style>
+	.warn {
+		color: white;
+		background-color: yellow;
+	}
+	.critical {
+		color: white;
+		background-color: red;
+	}
+	.normal {
+		color: white;
+		background-color: green;
+	}
+</style>
+<script src="./scripts/jquery-1.7.1.min.js"></script>
+<script>
+
+function getIterations(projectId) {
+
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/iteration?project=/project/"+projectId+"&pagesize=100&fetch=true",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var html="<table border='1'>";
+			
+			var iterations=data.QueryResult.Results;
+			for(var key in iterations ) {
+				var iteration=iterations[key];
+				//console.info("iteration="+JSON.stringify(iterations[key]));
+				html+="<tr>";
+				html+="<td>";
+				html+="iteration:"+iteration._refObjectName;
+				html+="</td>";
+				html+="</tr>";
+			}
+			
+			html+="</table>";
+			
+			$("#iteration").html(html);
+		}
+	});
+                
+}
+
+function getUserStories(ref) {
+	
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=(Iteration%20=%20"+ref+")&pagesize=100&fetch=true",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var html="<table border='1'>";
+			
+			var userStories=data.QueryResult.Results;
+			for(var key in userStories ) {
+				var userStory=userStories[key];
+
+				html+="<tr>";
+				html+="<td>";
+				html+=userStory.FormattedID;
+				html+="</td>";
+				html+="<td>";
+				html+=userStory._refObjectName;
+				html+="</td>";
+				html+="<td id="+userStory.FormattedID+">";
+				html+="</td>";
+				html+="</tr>";	
+			}
+			
+			html+="</table>";
+			
+			$("#iteration").html(html);
+			
+			//getDefetcs(ref);
+			
+			for(var key in userStories ) {
+				var userStory=userStories[key];
+				getDesignTask(userStory._ref, userStory.FormattedID);
+			}
+			
+		}
+	});
+	
+	
+	
+}
+
+var iterationInfo={
+	startDate: "",
+	endDate: "",
+	weeks: 0
+};
+
+function init() {
+	var iterationRef="https://rally1.rallydev.com/slm/webservice/v2.0/iteration/19735555052";
+	getIterationInfo(iterationRef);
+	getUserStories(iterationRef);
+}
+
+function getIterationInfo(ref) {
+
+	$.ajax({
+		url: ref+"?fetch=true",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+			console.info("data="+JSON.stringify(data));
+			iterationInfo.startDate=new Date(data.Iteration.StartDate);
+			iterationInfo.endDate=new Date(data.Iteration.EndDate);
+			
+			console.info("data.StartDate="+data.Iteration.StartDate);
+			console.info("data.EndDate="+data.Iteration.EndDate);
+			console.info("0 iterationInfo="+JSON.stringify(iterationInfo));
+		}
+	});
+	
+}
+
+function getDefetcs(ref) {
+
+	$.ajax({
+		url: "https://rally1.rallydev.com/slm/webservice/v2.0/defect?query=(Iteration%20=%20"+ref+")&pagesize=100&fetch=true",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+			console.info("getDefetcs...");
+			var html=$("#iteration").html();
+			
+			console.info("html="+html);
+			
+			html+="<table border=1'>";
+			
+			var userStories=data.QueryResult.Results;
+			for(var key in userStories ) {
+				var userStory=userStories[key];
+
+				html+="<tr>";
+				html+="<td>";
+				html+=userStory.FormattedID;
+				html+="</td>";
+				html+="<td>";
+				html+=userStory._refObjectName;
+				html+="</td>";
+				html+="</tr>";
+			}
+			
+			html+="</table>";
+			
+			console.info("html="+html);
+			
+			$("#iteration").html(html);
+		}
+	});
+	
+}
+
+function getDesignTask(ref, formattedId) {
+	
+	$.ajax({
+		url: ref+"/Tasks",
+		type:"GET",
+		dataType: "json",
+		error: function(jqXHR, status, error) {
+			console.error("error="+error);
+		},
+		success: function(data, status, jqXHR) {
+
+			var tasks=data.QueryResult.Results;
+			var statusLevel=0;
+			for(var key in tasks ) {
+				var task=tasks[key];
+				
+				//console.info("task="+JSON.stringify(task));
+				
+				var taskName=task._refObjectName;
+				
+				if(taskName.indexOf("Design & Review") !=-1) {
+					console.info("task="+task._refObjectName+" task.State="+	task.State);
+					var level=getStatusLevel(task.State);
+					console.info("task.State="+task.State+" level="+level);
+					if(level>=statusLevel) {
+						statusLevel=level;
+					}
+					
+				}
+				
+			}
+			
+			var now=(new Date()).getTime();
+			var processEndDate=new Date();
+			
+			console.info("11 processEndDate="+processEndDate);
+			console.info("iterationInfo.startDate="+iterationInfo.startDate);
+			
+			processEndDate=processEndDate.setDate((iterationInfo.startDate).getDate()-3);
+			processEndDate=new Date(processEndDate);
+			
+			//console.info("(iterationInfo.startDate).getDate()="+(iterationInfo.startDate).getDate());
+			
+			console.info("22 processEndDate="+processEndDate);
+			
+			var onTime=true;
+			if(now>processEndDate.getTime()) {
+				console.info("delay");
+				onTime=false;
+			} else {
+				console.info("on time");
+				onTime=true;
+			}
+			
+			console.info("iterationInfo="+JSON.stringify(iterationInfo));
+			
+			console.info("formattedId="+formattedId+" statusLevel="+statusLevel);
+			$("#"+formattedId).html("statusLevel:"+statusLevel);
+			
+			if(statusLevel<=2 && onTime==false) {
+				$("#"+formattedId).addClass("critical");
+			} else {
+				$("#"+formattedId).addClass("normal");
+			}
+			
+		}
+	});
+
+}
+
+function getStatusLevel(status) {
+	console.info("status="+status);
+	if(status=="Defined") {
+		return 1;
+	} else if(status=="In-Progress") {
+		return 2;
+	} else if(status=="Completed") {
+		return 3;
+	}
+	return 0;
+}
+
+</script>
+<body onload="init()">
+	<input type=""
+	<div id="iteration">
+	</div>
+</body>
+</head>
+</html>

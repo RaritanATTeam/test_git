@@ -1,0 +1,113 @@
+.user_story {
+	background-color: #EDF9FC;
+	padding: 6 6 6 6;
+	margin: 10 10 10 10;
+	text-decoration:underline;
+}
+
+.user_story_title {
+	display: inline;
+	font:16px arial,sans-serif;
+	font-weight: bold;
+}
+
+.none {
+	color: black;
+	background-color: #DDDDDD;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 6 6 6 6;
+	margin: 6 6 6 6;
+	font:12px arial,sans-serif;
+}
+
+.warn {
+	color: black;
+	background-color: #FFFFAA;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 6 6 6 6;
+	margin: 6 6 6 6;
+	font:12px arial,sans-serif;
+}
+
+.critical {
+	color: black;
+	background-color: #FFAAAA;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 6 6 6 6;
+	margin: 6 6 6 6;
+	font:12px arial,sans-serif;
+}
+
+.critical_text {
+	color: red;
+	font:12px arial,sans-serif;
+	font-weight: bold;
+}
+
+.normal {
+	color: black;
+	background-color: #AAFFAA;
+	border-width: 1px;
+	border-style: solid;
+	border-color: gray;
+	padding: 6 6 6 6;
+	margin: 6 6 6 6;
+	font:12px arial,sans-serif;
+}
+
+.normal_text {
+	color: black;
+	font:12px arial,sans-serif;
+	font-weight: normal;
+}
+
+.process_title {
+	font:14px arial,sans-serif;
+	font-weight: bold;
+	text-decoration:underline;
+	line-height: 30px;
+}
+
+.owner_text {
+	color: #3876B7;
+}
+
+#iterationTimeLine {
+	width: 100%;
+	font:14px arial,sans-serif;
+}
+
+#iterationTimeLine td {
+	text-align: center;
+}
+
+.timeframe td {
+		font:12px arial,sans-serif;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
+
+.button_plus {
+	float: left;
+	display:block;
+	height:15px;
+	width:15px;
+	margin: 2 2 2 2;
+	background:url("https://rally1.rallydev.com/slm/images/icon_plus.gif") left no-repeat;
+}
+
+.button_minus {
+	float: left;
+	display:block;
+	height:15px;
+	width:15px;
+	margin: 2 2 2 2;
+	background:url("https://rally1.rallydev.com/slm/images/icon_minus.gif") left no-repeat;
+}

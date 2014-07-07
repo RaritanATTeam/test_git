@@ -1,0 +1,111 @@
+.canvas {
+	text-align:left;
+	font-size: 14px;
+	font-family:"Arial", Arial, serif;
+	border-width: 1px;
+	border-spacing: 1px;
+	border-style: solid;
+	border-color: lightgray;
+	border-collapse: collapse;
+	background-color: white;
+	width:90%;
+	margin-left: auto ;
+  	margin-right: auto ;
+	padding: 10px 10px 10px 10px;
+	color: #085478;
+}
+
+.canvas td {
+	color: #085478;
+}
+
+.mainTable {
+	border-width: 0px;
+	border-spacing: 1px;
+	border-style: none;
+	border-color: lightgray;
+	border-collapse: collapse;
+	background-color: white;
+	color: #085478;
+}
+
+.mainTable td {
+	font-size: 14px;
+	font-family:"Arial", Arial, serif;
+}
+
+#errorMessage {
+	font-size: 14px;
+	font-family:"Arial", Arial, serif;
+}
+
+.taskTable {
+	border-width: 0 0 1 0;
+	border-spacing: 1px;
+	border-style: solid;
+	border-color: lightgray;
+	border-collapse: collapse;
+	background-color: white;
+	color: #085478;
+}
+
+.taskTable th {
+	border-width: 0 0 1 0;
+	padding: 4px;
+	border-style: solid;
+	border-color: lightgray;
+	text-align:center;
+	background-color: #E5ECEE;
+	font-size: 12px;
+	font-family:"Arial", Arial, serif;
+}
+
+.taskTable td {
+	border-width: 0 0 1 0;
+	padding: 4px;
+	border-style: solid;
+	border-color: lightgray;
+	font-size: 12px;
+	font-family:"Arial", Arial, serif;
+}
+
+.usTr  {
+	background: white;
+	border-width: 0 0 1 0;
+	padding: 4px;
+	border-style: solid;
+	border-color: lightgray;
+	font-size: 12px;
+	font-family:"Arial", Arial, serif;
+}
+
+.taTr  {
+	background: #DFE4D8;
+	border-width: 0 0 1 0;
+	padding: 4px;
+	border-style: solid;
+	border-color: lightgray;
+	font-size: 12px;
+	font-family:"Arial", Arial, serif;
+}
+
+.state_on {
+	width:14px;
+	height:14px;
+	padding: 2px;
+	background-color:darkgreen;
+	color:white;
+	text-align:center;
+}
+
+.state_off {
+	border-width: 1px;
+	border-style: solid;
+	border-color: lightgray;
+	width:14px;
+	height:14px;
+	padding: 2px;
+	background-color:white;
+	color:lightgray;
+	text-align:center;
+}

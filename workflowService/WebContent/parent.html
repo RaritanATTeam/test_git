@@ -1,0 +1,210 @@
+<html>
+<head><script src="./scripts/jquery-1.7.1.min.js"></script><script src="./scripts/jschannel.js"></script></head>
+<body>
+<iframe id="childId" src="https://23.23.235.113:8081/workflowService/child.html" style="display:none;"></iframe>
+
+<script>
+
+
+var full_instance_name  = '';
+
+function err(data)
+{
+	
+}
+
+var chan = Channel.build({
+    window: document.getElementById("childId").contentWindow,
+    origin: "*",
+    scope: "testScope"
+});
+
+function cbLoginDone(data)
+{
+	
+	$("#result1").html(data);
+
+}
+
+function createInstance()
+{
+	str = '<map><entry><string>uuid</string><string>new value by alex222</string></entry><entry><string>_description_</string><string>ddd</string></entry></map>'
+	chan.call({
+    method: "createInstance",
+    params: { my_new_instance: {instance_name:'API_TEST', username: 'alexp.chen', variables:str},cb:cbCreateInstance},
+    error: err,
+    success:function(){}
+        
+    });
+	
+}
+
+
+function cbCreateInstance(data)
+{
+	$("#result11").html(data);
+    obj = $.secureEvalJSON(data);
+	full_instance_name   =  obj.full_instance_name  ;
+
+	
+}
+
+function getGlobalVar()
+{
+	chan.call({
+    method: "getGlobalVar",
+    params: {full_instance_name: obj.full_instance_name,cb:cbGetGlobalVar},
+    error: err,
+    success:function(){}
+	}
+ );
+	
+}
+
+function cbGetGlobalVar(data)
+{
+	$("#result25").html(data);
+
+}
+
+function getLocalVar()
+{
+	chan.call({
+    method: "getLocalVar",
+    params: {full_instance_name: full_instance_name,cb:cbGetLocalVar},
+    error: err,
+    success:function(){}
+	}
+    );
+	
+}
+
+function cbGetLocalVar(data)
+{
+	$("#result125").html(data);
+}
+
+
+function login(){
+	chan.call({
+    		method: "login",
+   		     params: {username:'alexp.chen', password: 'bpm', cb:cbLoginDone},
+            error: err,
+            success:function(){}
+        
+       }
+     );
+}
+
+function setGlobalVar(){
+	
+	chan.call({
+    		method: "setGlobalVar",
+   		     params: {full_instance_name: full_instance_name, vars: {uuid:'345',_description_: 'no body'} , cb: cbSetGlobalVar},
+            error: err,
+            success:function(){}
+        
+       }
+     );
+}
+
+function cbSetGlobalVar(data)
+{
+	$("#result8").html(data);
+}
+
+function setLocalVar()
+{
+	chan.call({
+    		method: "setLocalVar",
+   		     params: {full_instance_name: full_instance_name, vars: {local: 'http://www.cnn.com'} , cb: cbSetLocalVar},
+            error: err,
+            success:function(){}
+        
+       }
+     );
+	
+}
+function cbSetLocalVar(data)
+{
+	$("#result9").html(data);
+}
+
+function runTask()
+{
+	chan.call({
+    		method: "runTask",
+   		     params: {full_instance_name: full_instance_name, cb: cbRunTask},
+            error: err,
+            success:function(){}
+        
+       }
+     );
+	
+}
+
+function cbRunTask(data)
+{
+	$("#result10").html(data);
+}
+
+</script>
+<h3>Workflow Cross Domain API Test</h3>
+		<table width="100%" border>
+			<tr>
+				<th width="20%">API Name</th>
+				<th width="40%">Input Parmas</th>
+				<th width="40%">Output from AT WorkFlow Server</th>
+			</tr>
+			
+			<tr>
+				<td><a href="javascript:login()">login</a>(You need Login first then create instance below)</td>
+				<td><div id="input1">{username:'alexp.chen', password: 'bpm', cb:cbLoginDone}</div></td>
+				<td><div id="result1">&nbsp;</div></td>
+			</tr>
+			
+			<tr>
+				<td><a href="javascript:createInstance()"> createInstance </a>(will also init the global varibles: uuid, and _description_)</td>
+				<td><div id="input11">{ my_new_instance: {instance_name:'API_TEST', username: 'alexp.chen', variables:str},cb:cbCreateInstance}</div></td>
+				<td><div id="result11">&nbsp;</div></td>
+			</tr>
+            
+            <tr>
+				<td><a href="javascript:getGlobalVar()"> getGlobalVar </a></td>
+				<td><div id="input25">{full_instance_name: obj.full_instance_name,cb:cbGetGlobalVar}</div></td>
+				<td><div id="result25"></div></td>
+			</tr>
+            
+            <tr>
+				<td><a href="javascript:getLocalVar()"> getLocalVar</a></td>
+				<td><div id="input125">{full_instance_name: full_instance_name, vars: {local: 'http://www.cnn.com'} , cb: cbSetLocalVar}</div></td>
+				<td><div id="result125"></div></td>
+			</tr>		
+			
+		
+			<tr>
+				<td><a href="javascript:setGlobalVar()"> setGlobalVar </a></td>
+				<td><div id="input8">{full_instance_name: full_instance_namem, vars: {uuid:'345',_description_: 'no body'} , cb: cbSetGlobalVar}</div></td>
+				<td><div id="result8">&nbsp;</div></td>
+			</tr>
+			
+			<tr>
+				<td><a href="javascript:setLocalVar()"> setLocalVar </a></td>
+				<td><div id="input9">{full_instance_name: full_instance_name, vars: {externalUrl: 'http://www.cnn.com'} , cb: cbSetLocalVar}</div></td>
+				<td><div id="result9">&nbsp;</div></td>
+			</tr>
+			
+			
+			<tr>
+				<td><a href="javascript:runTask()"> runTask </a></td>
+				<td><div id="input10">{full_instance_name: full_instance_name, cb: cbRunTask}</div></td>
+				<td><div id="result10">&nbsp;</div></td>
+			</tr>
+			
+			
+		</table>
+        
+        <div style="padding-top:10px;"> <img src="./images/apitestv2.png"/></div>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.8.18.custom.css">
+	 <link rel="stylesheet" href="./css/atTab.css">
+    <script src="./scripts/jquery-1.7.1.min.js"></script>
+    <script src="./scripts/themeswitchertool.js"></script>
+    <script src="./scripts/agile_base.js"></script>
+    
+    <script>
+    
+		function getAgileUser() {
+		
+			//var username="randy.chen@raritan.com";
+		
+			var userName = getUrlVars()["userName"];
+			var password="";
+			
+			console.log("userName="+userName);
+			
+			//$("#input1").html("Authorization:Basic "+username+":"+password);
+				
+			$.ajax({
+			  url:"/workflowService/at/webservice/1.0/getAgileUserList",
+			  type:"GET",
+			  contentType:"application/json; charset=utf-8",
+			  dataType:"json",
+			  beforeSend: function(xhr) {
+					xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(userName + ":" + password));
+				  },
+			  success: function(data){
+					console.log(data);
+					var result=stringify(data);
+					$("#test_result1").html(result);
+					
+					
+					$("#userName").html(userName);
+					
+				}
+			})
+		
+		}
+    
+	 function init() {
+	 	getAgileUser();
+	 }
+    
+    </script>
+	 
+	</head>
+	<body onload="init()">
+
+		<div class="ui-widget" align="center">
+			<img src="./images/logo-with-tag-130x39.gif"/>
+									
+			<h1 class="ui-widget-header">To Do List: <span id="userName"></span></h1>
+		
+			<table cellpadding="0" width="80%">
+				<tbody>
+					<tr>
+						<td><div id="test_result1"></div></td>
+					</tr>
+				</tbody>
+			</table>
+							
+		</div>
+		
+	</body>
+	
+</html>

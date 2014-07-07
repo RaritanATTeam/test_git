@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="./scripts/jquery-1.7.1.min.js"></script>
+	<meta charset="utf-8">
+	<title>AT's Workflow Instance Page</title>
+	<link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.8.18.custom.css">
+	<link rel="stylesheet" href="./css/atTab.css">
+	<script>
+	$(function() {
+		$( "#tabs" ).tabs();
+	});
+	</script>
+<style>
+label ,td{
+font-size:12px;
+font-family:Arial, Helvetica, sans-serif;	
+}
+.filter_div{
+  padding:10px;	
+}
+.t_body{
+overflow-y: auto; 
+max-height:100px;
+}
+.tbl_cell_description
+{
+    white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
+	-o-text-overflow: ellipsis; 
+	-khtml-text-overflow: ellipsis; 
+	-moz-text-overflow: ellipsis; 
+	-webkit-text-overflow: ellipsis;
+	-moz-binding: url('./css/ellipsis.xml#ellipsis');
+}
+.hidden{
+display:none;	
+}
+.show{
+display:block;	
+}
+thead label{
+font-weight:bold;	
+}
+a{
+text-decoration:none;	
+
+}
+</style>
+</head>
+<body>
+
+<div class="demo" align="center">
+<img src="./images/logo-with-tag-130x39.gif"/>
+<div id="tabs">
+	<ul>
+		<li><a href="#assigned_tab">Assigned Workflow Tasks</a></li>
+		<li><a href="#owned_tab">Owned Workflow Tasks</a></li>
+	</ul>
+	<div id="assigned_tab">
+ <!-- start the assinged tab -->
+          <div class="filter_div"><label>Process Filter: </label> <select id="type_instance" style="cursor:pointer;"></select></div>
+          <table cellpadding="1" cellspacing="0" border="1"  style="table-layout:fixed; width:100%;">
+                 <thead style="background-color:#C96;" >
+                       <tr>
+                            <td>
+        	                   <label style='width:10%;'>Process</label>
+                            </td>
+                            <td style='width:45%;'>
+        	                   <label>Description</label>
+                            </td>
+                            <td style='width:40px;'><label>Form</label>
+                            </td>
+                             <td style='width:20px;'><label>UI</label>
+                            </td>
+                             <td style="width:80px;cursor:pointer;" id="id_updated"><label style="color:blue; text-decoration:underline;">Updated</label><image align='top' style="margin-top:-5px;" src='./images/1space.gif' id="id_img_created"/>
+                            </td>
+                            <td><label>State</label>
+                            </td>
+                       </tr>
+               </thead>
+
+              <tbody id="tasklist">
+
+              </tbody>
+              <tfoot id="id_pagination">
+<tr><td style="padding:5px;" colspan="6" align="right"><img style="padding-right: 10px;" id="id_2_begin" src="./images/pagination-beginning.gif"/><img style="padding-right: 10px;" id="id_2_previous" src="./images/pagination-previous.gif"/><img style="padding-right: 10px;" id="id_2_next" src="./images/pagination-next.gif"/><img style="padding-right: 10px;" id="id_2_end" src="./images/pagination-end.gif"/><label  style="padding-right: 10px;" style="padding-left:5px;" id="id_pages">Page 1/10</label></td></tr>
+              </tfoot>
+
+         </table>
+    
+    
+
+	</div><!-- start the assinged tab -->
+	<div id="owned_tab">
+	     <h4>under construction</h4>
+	</div>
+
+</div><!-- End tabs -->
+</div>
+<h4 style="padding-left:15px;" id="id_user">Loading Please Wait...<image style="padding-left:15px;" src="./images/ajax-loader.gif"/></h4>
+<script type="text/javascript" src="./scripts/url_utility.js"></script>
+<script type="text/javascript" src="./scripts/ownedList.js"></script>
+
+
+</body>
+</html>
