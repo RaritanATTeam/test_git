@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 	<script src="scripts/jquery-1.7.1.min.js"></script>
 	<script>
-		
+		//
 		var Base64 = {
 		 
 			// private property
