@@ -15,7 +15,7 @@ if(parentUrl!=null) {
 }
 
 System.out.println("currentProjectId="+currentProjectId);
-
+   
 %>
 <script>
 	var projectSel;
